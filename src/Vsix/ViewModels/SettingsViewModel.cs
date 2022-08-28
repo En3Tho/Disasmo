@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using System.Windows.Input;
 using Disasmo.Properties;
+using Disasmo.Runner;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 
@@ -116,7 +116,7 @@ namespace Disasmo
 
                 if (!string.IsNullOrWhiteSpace(_pathToLocalCoreClr))
                 {
-                    string jitDir = FindJitDirectory(_pathToLocalCoreClr);
+                    string jitDir = JitUtils.FindJitDirectory(_pathToLocalCoreClr);
                     if (jitDir != null)
                     {
                         string[] jits = Directory.GetFiles(jitDir, "clrjit*.dll");
@@ -360,37 +360,6 @@ namespace Disasmo
                 Settings.Default.AllowDisasmInvocations_V7 = value;
                 Settings.Default.Save();
             }
-        }
-
-        public void FillWithUserVars(Dictionary<string, string> dictionary)
-        {
-            if (string.IsNullOrWhiteSpace(CustomEnvVars))
-                return;
-
-            var pairs = CustomEnvVars.Split(new [] {"\r\n", "\n"}, StringSplitOptions.RemoveEmptyEntries);
-            foreach (var pair in pairs)
-            {
-                var parts = pair.Split('=');
-                if (parts.Length == 2)
-                    dictionary[parts[0].Trim()] = parts[1].Trim();
-            }
-        }
-
-        private static string FindJitDirectory(string basePath)
-        {
-            string jitDir = Path.Combine(basePath, @"artifacts\bin\coreclr\windows.x64.Checked");
-            if (Directory.Exists(jitDir))
-            {
-                return jitDir;
-            }
-
-            jitDir = Path.Combine(basePath, @"artifacts\bin\coreclr\windows.x64.Debug");
-            if (Directory.Exists(jitDir))
-            {
-                return jitDir;
-            }
-
-            return null;
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Disasmo.Runner;
 
 namespace Disasmo.Utils
 {
@@ -12,23 +13,22 @@ namespace Disasmo.Utils
     {
         public const string DisasmoLoaderName = "DisasmoLoader3";
 
-        private static async Task<string> GetPathToLoader(CancellationToken ct)
+        private static async Task<string> GetPathToLoader(CancellationToken ct, Version disasmoVersion)
         {
             ProcessResult dotnetVersion = await ProcessUtils.RunProcess("dotnet", "--version", cancellationToken: ct);
-            Version addinVersion = DisasmoPackage.Current.GetCurrentVersion();
-            return Path.Combine(Path.GetTempPath(), DisasmoLoaderName, $"{addinVersion}_{dotnetVersion.Output}");
+            return Path.Combine(Path.GetTempPath(), DisasmoLoaderName, $"{disasmoVersion}_{dotnetVersion.Output}");
         }
 
-        public static async Task InitLoaderAndCopyTo(string dest, Action<string> logger, CancellationToken ct)
+        public static async Task InitLoaderAndCopyTo(string dest, Version disasmoVersion, Action<string> logger, CancellationToken ct)
         {
             if (!Directory.Exists(dest))
                 throw new InvalidOperationException($"ERROR: dest dir was not found: {dest}");
 
-            string dir = null;
+            string dir;
             try
             {
                 logger("Getting SDK version...");
-                dir = await GetPathToLoader(ct);
+                dir = await GetPathToLoader(ct, disasmoVersion);
             }
             catch (Exception exc)
             {
@@ -58,10 +58,10 @@ namespace Disasmo.Utils
             ct.ThrowIfCancellationRequested();
 
             if (!File.Exists(csfile))
-                IdeUtils.SaveEmbeddedResourceTo($"{DisasmoLoaderName}.cs_template", dir);
+                SaveEmbeddedResourceTo($"{DisasmoLoaderName}.cs_template", dir);
 
             if (!File.Exists(csproj))
-                IdeUtils.SaveEmbeddedResourceTo($"{DisasmoLoaderName}.csproj_template", dir);
+                SaveEmbeddedResourceTo($"{DisasmoLoaderName}.csproj_template", dir);
 
             Debug.Assert(File.Exists(csfile));
             Debug.Assert(File.Exists(csproj));
@@ -78,6 +78,18 @@ namespace Disasmo.Utils
             ct.ThrowIfCancellationRequested();
             File.Copy(outDll, outDllDest, true);
             File.Copy(outJson, outJsonDest, true);
+        }
+
+        public static void SaveEmbeddedResourceTo(string resource, string folder)
+        {
+            string filePath = Path.Combine(folder, resource.Replace("_template", ""));
+            if (File.Exists(filePath))
+                return;
+
+            using Stream stream = typeof(DisasmoSettings).Assembly.GetManifestResourceStream("Disasmo.Resources."  + resource)!;
+            using FileStream file = File.Create(filePath);
+            file.Seek(0, SeekOrigin.Begin);
+            stream.CopyTo(file);
         }
     }
 }

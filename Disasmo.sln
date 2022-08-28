@@ -5,6 +5,10 @@ VisualStudioVersion = 16.0.28516.95
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disasmo.Vsix", "src\Vsix\Disasmo.Vsix.csproj", "{3334577B-6E6F-4AF2-BDD3-FE03D697CCC5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disasmo", "Disasmo\Disasmo.csproj", "{BBE009D2-E1EC-45EA-AE4D-365D16BD0E3D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disasmo.ConsoleHost", "Disasmo.ConsoleHost\Disasmo.ConsoleHost.csproj", "{AD3046D9-DF28-4DFF-93C1-061916C74A6F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{3334577B-6E6F-4AF2-BDD3-FE03D697CCC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3334577B-6E6F-4AF2-BDD3-FE03D697CCC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3334577B-6E6F-4AF2-BDD3-FE03D697CCC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBE009D2-E1EC-45EA-AE4D-365D16BD0E3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBE009D2-E1EC-45EA-AE4D-365D16BD0E3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBE009D2-E1EC-45EA-AE4D-365D16BD0E3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBE009D2-E1EC-45EA-AE4D-365D16BD0E3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD3046D9-DF28-4DFF-93C1-061916C74A6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD3046D9-DF28-4DFF-93C1-061916C74A6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD3046D9-DF28-4DFF-93C1-061916C74A6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD3046D9-DF28-4DFF-93C1-061916C74A6F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

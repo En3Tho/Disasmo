@@ -18,7 +18,7 @@ namespace Disasmo
             if (LastDocument != null)
             {
                 var window = await IdeUtils.ShowWindowAsync<DisasmWindow>(cancellationToken);
-                window?.ViewModel?.RunOperationAsync(await GetSymbol(LastDocument, LastTokenPos, cancellationToken));
+                window?.ViewModel?.RunOperationVSAsync(await GetSymbol(LastDocument, LastTokenPos, cancellationToken), window.ViewModel.SettingsVm);
             }
         }
 
