@@ -1,6 +1,6 @@
 ﻿using Disasmo.Runner;
 
-namespace Disasmo;
+namespace Disasmo.Utils;
 
 public static class DisasmoSettingsExtensions
 {

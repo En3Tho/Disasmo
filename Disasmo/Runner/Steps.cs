@@ -11,7 +11,7 @@ namespace Disasmo.Runner;
 
 public static class Steps
 {
-    public static async Task<string> RunPublishProject(SymbolInfo symbol, DisasmoSettings settings, string projectPath,
+    public static async Task<string?> RunPublishProject(SymbolInfo symbol, DisasmoSettings settings, string projectPath,
         string targetFramework, string disasmoOutputDir, Action<string> reportLoadingStatus,
         CancellationToken cancellationToken = default)
     {
@@ -55,7 +55,12 @@ public static class Steps
             // Validation for Flowgraph tab
             if (settings.FgEnable)
             {
-                var phase = settings.FgPhase.Trim();
+                if (string.IsNullOrWhiteSpace(settings.FgPhase))
+                {
+                    return "Fg is enabled but FgPhase is empty";
+                }
+
+                var phase = settings.FgPhase!.Trim();
                 if (phase == "*")
                 {
                     return "* as a phase name is not supported yet."; // TODO: implement
@@ -97,7 +102,7 @@ public static class Steps
                 }
             }
 
-            string currentProjectDirPath = Path.GetDirectoryName(projectPath);
+            string currentProjectDirPath = Path.GetDirectoryName(projectPath)!;
 
             if (string.IsNullOrEmpty(currentProjectDirPath))
             {
@@ -186,7 +191,7 @@ public static class Steps
         }
     }
 
-    public static async Task<(bool Error, string Output, string FgPngPath)> RunFinalExe(SymbolInfo currentSymbol,
+    public static async Task<(bool Error, string Output, string? FgPngPath)> RunFinalExe(SymbolInfo currentSymbol,
         DisasmoSettings settings, string currentProjectPath, string disasmoOutDir, Action<string> reportLoadingStatus,
         CancellationToken cancellationToken = default)
     {
@@ -252,7 +257,7 @@ public static class Steps
                 finalOutput = result.Output + "\nERROR:\n" + result.Error;
             }
 
-            string fgPngPath = null;
+            string? fgPngPath = null;
             if (settings.FgEnable && settings.JitDumpInsteadOfDisasm)
             {
                 var currentFgFile = envVars["DOTNET_JitDumpFgFile"];

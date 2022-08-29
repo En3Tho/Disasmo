@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Disasmo.Runner;
+using Disasmo.Utils;
 using Project = EnvDTE.Project;
 using Task = System.Threading.Tasks.Task;
 using Disasmo.ViewModels;

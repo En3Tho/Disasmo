@@ -6,12 +6,12 @@ namespace Disasmo.Runner;
 
 public record DisasmoSettings
 {
-    public string PathToLocalCoreClr { get; set; }
+    public string PathToLocalCoreClr { get; set; } = "";
     public bool JitDumpInsteadOfDisasm { get; set; }
-    public string CustomEnvVars { get; set; }
-    public string Crossgen2Args { get; set; }
+    public string? CustomEnvVars { get; set; }
+    public string? Crossgen2Args { get; set; }
     public bool ShowAsmComments { get; set; }
-    public Version CurrentVersion { get; set; }
+    public Version CurrentVersion { get; set; } = new();
     public bool AllowDisasmInvocations { get; set; }
     public bool UseDotnetPublishForReload { get; set; }
     public bool UseDotnetBuildForReload { get; set; }
@@ -22,10 +22,10 @@ public record DisasmoSettings
     public bool UseTieredJit { get; set; }
     public bool UsePGO { get; set; }
     public bool UseCustomRuntime { get; set; }
-    public string SelectedCustomJit { get; set; }
-    public string GraphvisDotPath { get; set; }
+    public string? SelectedCustomJit { get; set; }
+    public string? GraphvisDotPath { get; set; }
     public bool FgEnable { get; set; }
-    public string FgPhase { get; set; }
+    public string? FgPhase { get; set; }
     public bool CrossgenIsSelected { get; set; }
 
     public const string DefaultJit = "clrjit.dll";
@@ -38,7 +38,7 @@ public static class DisasmoSettingsExtensions
         if (string.IsNullOrWhiteSpace(settings.CustomEnvVars))
             return;
 
-        var pairs = settings.CustomEnvVars.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+        var pairs = settings.CustomEnvVars!.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
         foreach (var pair in pairs)
         {
             var parts = pair.Split('=');
@@ -59,7 +59,7 @@ public static class DisasmoSettingsExtensions
             envVars["DOTNET_JitDisasm"] = target;
 
         if (!string.IsNullOrWhiteSpace(settings.SelectedCustomJit) && !settings.CrossgenIsSelected &&
-            !settings.SelectedCustomJit.Equals(DisasmoSettings.DefaultJit, StringComparison.InvariantCultureIgnoreCase))
+            !settings.SelectedCustomJit!.Equals(DisasmoSettings.DefaultJit, StringComparison.InvariantCultureIgnoreCase))
         {
             envVars["DOTNET_AltJitName"] = settings.SelectedCustomJit;
             envVars["DOTNET_AltJit"] = target;
@@ -95,7 +95,7 @@ public static class DisasmoSettingsExtensions
 
             envVars["DOTNET_JitDumpFg"] = target;
             envVars["DOTNET_JitDumpFgDot"] = "1";
-            envVars["DOTNET_JitDumpFgPhase"] = settings.FgPhase.Trim();
+            envVars["DOTNET_JitDumpFgPhase"] = settings.FgPhase!.Trim();
             envVars["DOTNET_JitDumpFgFile"] = Path.GetTempFileName();
         }
 
@@ -106,13 +106,13 @@ public static class DisasmoSettingsExtensions
 
     public static bool FillCrossgenEnvVars(this DisasmoSettings settings, string fileName, string dstFolder,
         Dictionary<string, string> envVars,
-        out string command, out string executable, out string error)
+         out string command, out string executable, out string error)
     {
         if (!JitUtils.GetPathToCoreClrChecked(settings, out var clrCheckedFilesDir, out error) ||
             !JitUtils.GetPathToRuntimePack(settings, out var runtimePackPath, out error))
         {
-            command = null;
-            executable = null;
+            command = "";
+            executable = "";
             return false;
         }
 
@@ -124,8 +124,8 @@ public static class DisasmoSettingsExtensions
         foreach (var envVar in envVars)
         {
             var keyLower = envVar.Key.ToLowerInvariant();
-            if (keyLower?.StartsWith("dotnet_") == false &&
-                keyLower?.StartsWith("complus_") == false)
+            if (string.IsNullOrWhiteSpace(keyLower)
+                || (keyLower.StartsWith("dotnet_") == false && keyLower.StartsWith("complus_") == false))
             {
                 continue;
             }

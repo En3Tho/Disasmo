@@ -12,16 +12,16 @@ namespace Disasmo.Utils
         public static async Task<ProcessResult> RunProcess(
             string path, 
             string args = "", 
-            Dictionary<string, string> envVars = null, 
-            string workingDir = null, 
-            Action<bool, string> outputLogger = null, 
+            Dictionary<string, string>? envVars = null,
+            string? workingDir = null,
+            Action<bool, string>? outputLogger = null,
             CancellationToken cancellationToken = default)
         {
             UserLogger.AppendText($"\nExecuting a command in directory \"{workingDir}\":\n\t{path} {args}\nEnv.vars:\n{DumpEnvVars(envVars)}");
 
             var logger = new StringBuilder();
             var loggerForErrors = new StringBuilder();
-            Process process = null;
+            Process? process = null;
             try
             {
                 var processStartInfo = new ProcessStartInfo
@@ -47,7 +47,7 @@ namespace Disasmo.Utils
                 process = Process.Start(processStartInfo);
                 cancellationToken.ThrowIfCancellationRequested();
 
-                process.ErrorDataReceived += (sender, e) =>
+                process!.ErrorDataReceived += (sender, e) =>
                     {
                         outputLogger?.Invoke(true, e.Data + "\n");
                         logger.AppendLine(e.Data);
@@ -87,7 +87,7 @@ namespace Disasmo.Utils
             return tcs.Task;
         }
 
-        private static string DumpEnvVars(Dictionary<string, string> envVars)
+        private static string DumpEnvVars(Dictionary<string, string>? envVars)
         {
             if (envVars == null)
                 return "";
