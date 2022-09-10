@@ -1,10 +1,19 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 
 namespace Disasmo.Runner
 {
     public static class JitUtils
     {
+        public static string OS =
+            Environment.OSVersion.Platform switch
+            {
+                PlatformID.MacOSX => "macos",
+                PlatformID.Unix => "linux",
+                _ => "windows"
+            };
+
         public static bool GetPathToCoreClrChecked(DisasmoSettings settings, out string path, out string error, string arch = "x64")
         {
             var clrCheckedFilesDir = FindJitDirectory(settings.PathToLocalCoreClr, arch);
@@ -28,13 +37,13 @@ namespace Disasmo.Runner
 
         public static string FindJitDirectory(string basePath, string arch = "x64")
         {
-            string jitDir = Path.Combine(basePath, $@"artifacts\bin\coreclr\windows.{arch}.Checked");
+            string jitDir = Path.Combine(basePath, $@"artifacts\bin\coreclr\{OS}.{arch}.Checked");
             if (Directory.Exists(jitDir))
             {
                 return jitDir;
             }
 
-            jitDir = Path.Combine(basePath, $@"artifacts\bin\coreclr\windows.{arch}.Debug");
+            jitDir = Path.Combine(basePath, $@"artifacts\bin\coreclr\{OS}.{arch}.Debug");
             if (Directory.Exists(jitDir))
             {
                 return jitDir;
@@ -55,7 +64,7 @@ namespace Disasmo.Runner
             string runtimePackPath = null;
             if (Directory.Exists(runtimePacksPath))
             {
-                var packs = Directory.GetDirectories(runtimePacksPath, "*-windows-Release-" + arch);
+                var packs = Directory.GetDirectories(runtimePacksPath, $"*-{OS}-Release-" + arch);
                 runtimePackPath = packs.OrderByDescending(i => i).FirstOrDefault();
             }
 

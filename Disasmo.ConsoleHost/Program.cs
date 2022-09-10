@@ -1,5 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
+using System.Diagnostics;
 using Disasmo.Runner;
 
 var settings = new DisasmoSettings()
@@ -29,7 +30,7 @@ var settings = new DisasmoSettings()
 
 var symbolInfo = new SymbolInfo()
 {
-    MethodName = "NonOptimized",
+    MethodName = null,//"Equal1",
     ClassName = "Program",
     QualifiedClassName = "Program",
     IsLocalFunction = false
@@ -51,4 +52,9 @@ else
     Console.WriteLine($"IsError: {output.Error}");
     Console.WriteLine($"Output: {output.Output}");
     Console.WriteLine($"PngFilePath: {output.FgPngPath}");
+
+    var filePath = $"{disasmoOutputDir}\\output.asm";
+    File.WriteAllText(filePath, output.Output);
+    var codePath = @"C:\Users\RZRL\AppData\Local\Programs\Microsoft VS Code\Code.exe";
+    Process.Start($"{codePath} \"{filePath}\"");
 }

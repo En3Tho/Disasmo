@@ -196,7 +196,7 @@ namespace Disasmo
             if (symbol == null)
                 return;
 
-            if (symbol is IMethodSymbol { IsGenericMethod: true })
+            if (symbol.IsGenericMethod())
             {
                 Output = "Generic methods are not supported yet.";
                 return;

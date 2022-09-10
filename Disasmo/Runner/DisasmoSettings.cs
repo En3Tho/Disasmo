@@ -4,7 +4,7 @@ using System.IO;
 
 namespace Disasmo.Runner;
 
-public record DisasmoSettings
+public class DisasmoSettings
 {
     public string PathToLocalCoreClr { get; set; } = "";
     public bool JitDumpInsteadOfDisasm { get; set; }

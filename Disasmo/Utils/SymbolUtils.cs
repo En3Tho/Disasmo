@@ -1,10 +1,15 @@
 ﻿using Microsoft.CodeAnalysis;
 using SymbolInfo = Disasmo.Runner.SymbolInfo;
 
-namespace Disasmo;
+namespace Disasmo.Utils;
 
-public static class SymbolExtensions
+public static class SymbolUtils
 {
+    public static bool IsGenericMethod(this ISymbol symbol)
+    {
+        return symbol is IMethodSymbol { IsGenericMethod: true };
+    }
+
     public static SymbolInfo ToSymbolInfo(this ISymbol symbol)
     {
         if (symbol is IMethodSymbol methodSymbol)
