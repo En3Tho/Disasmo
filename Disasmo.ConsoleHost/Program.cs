@@ -26,6 +26,7 @@ var settings = new DisasmoSettings()
     FgEnable = false,
     FgPhase = null,
     CrossgenIsSelected = false,
+    TargetFramework = "net7.0"
 };
 
 var symbolInfo = new SymbolInfo()
@@ -37,11 +38,10 @@ var symbolInfo = new SymbolInfo()
 };
 
 var projectPath = @"G:\source\repos\En3Tho\dotnet\JitApps\Multiplication\Multiplication.csproj";
-var tfm = "net7.0";
 var disasmoOutputDir = @"G:\source\repos\En3Tho\dotnet\JitApps\Multiplication\Disasmo";
 var reporter = (string status) => Console.WriteLine(status);
 
-var err = await Steps.RunPublishProject(symbolInfo, settings, projectPath, tfm, disasmoOutputDir, reporter);
+var err = await Steps.RunPublishProject(symbolInfo, settings, projectPath, disasmoOutputDir, reporter);
 if (err is { })
 {
     Console.WriteLine(err);

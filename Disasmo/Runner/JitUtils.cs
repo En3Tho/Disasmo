@@ -25,17 +25,17 @@ namespace Disasmo.Runner
                         "git clone git@github.com:dotnet/runtime.git\n" +
                         "cd runtime\n" +
                         $"build.cmd Clr+Libs -c Release -rc Checked -a {arch}\n\n";
-                path = null;
+                path = null!;
                 return false;
             }
 
-            error = null;
-            path = clrCheckedFilesDir;
+            error = null!;
+            path = clrCheckedFilesDir!;
 
             return true;
         }
 
-        public static string FindJitDirectory(string basePath, string arch = "x64")
+        public static string? FindJitDirectory(string basePath, string arch = "x64")
         {
             string jitDir = Path.Combine(basePath, $@"artifacts\bin\coreclr\{OS}.{arch}.Checked");
             if (Directory.Exists(jitDir))

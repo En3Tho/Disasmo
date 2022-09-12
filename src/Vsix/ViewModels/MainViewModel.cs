@@ -30,6 +30,7 @@ namespace Disasmo
         private ISymbol _currentSymbol;
         private bool _success;
         private string _currentProjectPath;
+        private string _currentTf;
         private string _fgPngPath;
         private string DisasmoOutDir = "";
 
@@ -237,10 +238,13 @@ namespace Disasmo
                 dte.SaveAllActiveDocuments();
 
                 string targetFramework = await projectProperties.GetEvaluatedPropertyValueAsync("TargetFramework");
-                targetFramework = targetFramework.ToLowerInvariant().Trim();
+
+                var disasmoSettings = settings.ToDisasmoSettings();
+                disasmoSettings.TargetFramework = targetFramework.ToLowerInvariant().Trim();
+
                 DisasmoOutDir = Path.Combine(await projectProperties.GetEvaluatedPropertyValueAsync("OutputPath"), DisasmoFolder);
 
-                var error = await Steps.RunPublishProject(symbol.ToSymbolInfo(), settings.ToDisasmoSettings(), _currentProjectPath, targetFramework, DisasmoOutDir,
+                var error = await Steps.RunPublishProject(symbol.ToSymbolInfo(), disasmoSettings, _currentProjectPath, DisasmoOutDir,
                     status => LoadingStatus = status, UserCt);
                 if (error != null)
                 {

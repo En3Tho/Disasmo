@@ -12,7 +12,7 @@ namespace Disasmo.Runner;
 public static class Steps
 {
     public static async Task<string?> RunPublishProject(SymbolInfo symbol, DisasmoSettings settings, string projectPath,
-        string targetFramework, string disasmoOutputDir, Action<string> reportLoadingStatus,
+        string disasmoOutputDir, Action<string> reportLoadingStatus,
         CancellationToken cancellationToken = default)
     {
         try
@@ -28,7 +28,7 @@ public static class Steps
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            targetFramework = targetFramework.ToLowerInvariant().Trim();
+            var targetFramework = settings.TargetFramework.ToLowerInvariant().Trim();
 
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -135,7 +135,10 @@ public static class Steps
 
                 var fasterBuildArgs = new Dictionary<string, string>
                 {
-                    ["DOTNET_TC_QuickJitForLoops"] = "1" // slightly speeds up build
+                    ["DOTNET_TC_QuickJitForLoops"] = "1", // slightly speeds up build (not needed for >=.net7.0)
+                    ["DOTNET_SKIP_FIRST_TIME_EXPERIENCE"] = "1",
+                    ["DOTNET_MULTILEVEL_LOOKUP"] = "0",
+                    ["DOTNET_CLI_TELEMETRY_OPTOUT"] = "1"
                 };
 
                 publishResult = await ProcessUtils.RunProcess("dotnet", dotnetBuildArgs, fasterBuildArgs,
@@ -156,7 +159,7 @@ public static class Steps
                 return publishResult.Output;
             }
 
-            if (settings.UseDotnetPublishForReload)
+            if (settings.UseDotnetPublishForReload && settings.UseCustomRuntime)
             {
                 reportLoadingStatus("Copying files from locally built CoreCLR");
 
@@ -202,7 +205,7 @@ public static class Steps
 
             if (!settings.RunAppMode && !settings.CrossgenIsSelected)
             {
-                await LoaderAppManager.InitLoaderAndCopyTo(dstFolder, settings.CurrentVersion, log =>
+                await LoaderAppManager.InitLoaderAndCopyTo(settings.TargetFramework, dstFolder, settings.CurrentVersion, log =>
                 {
                     /*TODO: update UI*/
                 }, cancellationToken);
@@ -221,7 +224,7 @@ public static class Steps
 
             string executable = "dotnet";
 
-            if (settings.CrossgenIsSelected)
+            if (settings.CrossgenIsSelected && settings.UseCustomRuntime)
             {
                 if (!settings.FillCrossgenEnvVars(fileName, dstFolder, envVars, out command, out executable,
                         out error))
@@ -229,6 +232,11 @@ public static class Steps
 
                 reportLoadingStatus($"Executing crossgen2...");
             }
+            // else if (settings.IsNonCustomDotnetAotMode())
+            // {
+            //     // TODO:
+            //     // dotnet publish /p:NativeAot and /p:PublishReadyToRun don't print anything (msbuild hides stdout)
+            // }
             else
             {
                 reportLoadingStatus($"Executing DisasmoLoader...");

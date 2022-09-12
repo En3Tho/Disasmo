@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace Disasmo.Runner;
 
@@ -21,12 +22,13 @@ public class DisasmoSettings
     public bool UseNoRestoreFlag { get; set; }
     public bool UseTieredJit { get; set; }
     public bool UsePGO { get; set; }
-    public bool UseCustomRuntime { get; set; }
+    public bool UseCustomRuntime { get; set; } = true;
     public string? SelectedCustomJit { get; set; }
     public string? GraphvisDotPath { get; set; }
     public bool FgEnable { get; set; }
     public string? FgPhase { get; set; }
     public bool CrossgenIsSelected { get; set; }
+    public string TargetFramework { get; set; } = "net7.0";
 
     public const string DefaultJit = "clrjit.dll";
 }
@@ -58,8 +60,9 @@ public static class DisasmoSettingsExtensions
         else
             envVars["DOTNET_JitDisasm"] = target;
 
-        if (!string.IsNullOrWhiteSpace(settings.SelectedCustomJit) && !settings.CrossgenIsSelected &&
-            !settings.SelectedCustomJit!.Equals(DisasmoSettings.DefaultJit, StringComparison.InvariantCultureIgnoreCase))
+        if (!string.IsNullOrWhiteSpace(settings.SelectedCustomJit)
+            && !settings.CrossgenIsSelected
+            && !settings.SelectedCustomJit!.Equals(DisasmoSettings.DefaultJit, StringComparison.InvariantCultureIgnoreCase))
         {
             envVars["DOTNET_AltJitName"] = settings.SelectedCustomJit;
             envVars["DOTNET_AltJit"] = target;
@@ -67,7 +70,7 @@ public static class DisasmoSettingsExtensions
 
         envVars["DOTNET_TieredPGO"] = settings.UsePGO ? "1" : "0";
 
-        if (!settings.UseDotnetPublishForReload)
+        if (!settings.UseDotnetPublishForReload && settings.UseCustomRuntime)
         {
             if (!JitUtils.GetPathToRuntimePack(settings, out var runtimePackPath, out error))
             {
@@ -124,8 +127,8 @@ public static class DisasmoSettingsExtensions
         foreach (var envVar in envVars)
         {
             var keyLower = envVar.Key.ToLowerInvariant();
-            if (string.IsNullOrWhiteSpace(keyLower)
-                || (keyLower.StartsWith("dotnet_") == false && keyLower.StartsWith("complus_") == false))
+            if (keyLower.StartsWith("dotnet_") == false
+                && keyLower.StartsWith("complus_") == false)
             {
                 continue;
             }
