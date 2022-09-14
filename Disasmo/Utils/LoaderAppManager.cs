@@ -88,14 +88,18 @@ namespace Disasmo.Utils
                 return;
 
             using Stream stream = typeof(DisasmoSettings).Assembly.GetManifestResourceStream("Disasmo.Resources."  + resource)!;
-            using FileStream file = File.Create(filePath);
-            file.Seek(0, SeekOrigin.Begin);
-            stream.CopyTo(file);
+            using var sr = new StreamReader(stream);
+            var content = sr.ReadToEnd();
 
             if (contentProcessor != null)
             {
-                File.WriteAllText(filePath, contentProcessor(File.ReadAllText(filePath)));
+                content = contentProcessor(content);
             }
+
+            using FileStream file = File.Create(filePath);
+            file.Seek(0, SeekOrigin.Begin);
+            using var sw = new StreamWriter(file);
+            sw.Write(content);
         }
     }
 }

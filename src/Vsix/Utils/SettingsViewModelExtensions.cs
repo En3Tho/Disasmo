@@ -14,7 +14,6 @@ public static class DisasmoSettingsExtensions
             Crossgen2Args = settingsViewModel.Crossgen2Args,
             ShowAsmComments = settingsViewModel.ShowAsmComments,
             CurrentVersion = settingsViewModel.CurrentVersion,
-            AllowDisasmInvocations = settingsViewModel.AllowDisasmInvocations,
             UseDotnetPublishForReload = settingsViewModel.UseDotnetPublishForReload,
             UseDotnetBuildForReload = settingsViewModel.UseDotnetBuildForReload,
             RunAppMode = settingsViewModel.RunAppMode,

@@ -21,13 +21,13 @@ public static class StepsUtil
             {
                 // just print them all, I don't know how to get "g__%MethodName|0_0" ugly name out of
                 // IMethodSymbol in order to pass it to JitDisasm. Ugh, I hate it.
-                target = currentSymbol.ClassName + "::*";
+                target = "*" + currentSymbol.ClassName + ":*";
                 hostType = currentSymbol.QualifiedClassName;
                 methodName = "*";
             }
             else
             {
-                target = currentSymbol.ClassName + "::" + currentSymbol.MethodName;
+                target = "*" + currentSymbol.ClassName + ":" + currentSymbol.MethodName;
                 hostType = currentSymbol.QualifiedClassName;
                 methodName = currentSymbol.MethodName;
 
@@ -41,7 +41,7 @@ public static class StepsUtil
         else
         {
             // the whole class
-            target = currentSymbol.ClassName + "::*";
+            target = currentSymbol.ClassName + ":*";
             hostType = currentSymbol.QualifiedClassName;
             methodName = "*";
         }

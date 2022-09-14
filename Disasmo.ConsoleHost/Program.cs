@@ -11,7 +11,6 @@ var settings = new DisasmoSettings()
     Crossgen2Args = null,
     ShowAsmComments = true,
     CurrentVersion = new(),
-    AllowDisasmInvocations = true,
     UseDotnetPublishForReload = false,
     UseDotnetBuildForReload = true,
     RunAppMode = false,
@@ -32,8 +31,8 @@ var settings = new DisasmoSettings()
 var symbolInfo = new SymbolInfo()
 {
     MethodName = null,//"Equal1",
-    ClassName = "Program",
-    QualifiedClassName = "Program",
+    ClassName = "Issue61412",
+    QualifiedClassName = "Issue61412",
     IsLocalFunction = false
 };
 

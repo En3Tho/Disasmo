@@ -13,7 +13,6 @@ public class DisasmoSettings
     public string? Crossgen2Args { get; set; }
     public bool ShowAsmComments { get; set; }
     public Version CurrentVersion { get; set; } = new();
-    public bool AllowDisasmInvocations { get; set; }
     public bool UseDotnetPublishForReload { get; set; }
     public bool UseDotnetBuildForReload { get; set; }
     public bool RunAppMode { get; set; }
