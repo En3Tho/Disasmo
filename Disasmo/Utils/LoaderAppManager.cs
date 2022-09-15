@@ -41,8 +41,8 @@ namespace Disasmo.Utils
             string outDll = Path.Combine(dir, "out", $"{DisasmoLoaderName}.dll");
             string outJson = Path.Combine(dir, "out", $"{DisasmoLoaderName}.runtimeconfig.json");
 
-            string outDllDest = Path.Combine(dest, DisasmoLoaderName + ".dll");
-            string outJsonDest = Path.Combine(dest, DisasmoLoaderName + ".runtimeconfig.json");
+            string outDllDest = Path.Combine(dest, $"{DisasmoLoaderName}.dll");
+            string outJsonDest = Path.Combine(dest, $"{DisasmoLoaderName}.runtimeconfig.json");
 
             if (!Directory.Exists(dir))
             {
@@ -96,10 +96,7 @@ namespace Disasmo.Utils
                 content = contentProcessor(content);
             }
 
-            using FileStream file = File.Create(filePath);
-            file.Seek(0, SeekOrigin.Begin);
-            using var sw = new StreamWriter(file);
-            sw.Write(content);
+            File.WriteAllText(filePath, content);
         }
     }
 }

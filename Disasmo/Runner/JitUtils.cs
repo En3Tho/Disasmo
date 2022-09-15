@@ -37,19 +37,17 @@ namespace Disasmo.Runner
 
         public static string? FindJitDirectory(string basePath, string arch = "x64")
         {
-            string jitDir = Path.Combine(basePath, $@"artifacts\bin\coreclr\{OS}.{arch}.Checked");
-            if (Directory.Exists(jitDir))
+
+            string? GetDirectory(string configuration)
             {
-                return jitDir;
+                if (Path.Combine(basePath, $@"artifacts\bin\coreclr\{OS}.{arch}.{configuration}") is var directory
+                    && Directory.Exists(directory))
+                    return directory;
+
+                return null;
             }
 
-            jitDir = Path.Combine(basePath, $@"artifacts\bin\coreclr\{OS}.{arch}.Debug");
-            if (Directory.Exists(jitDir))
-            {
-                return jitDir;
-            }
-
-            return null;
+            return GetDirectory("Checked") ?? GetDirectory("Debug");
         }
 
         public static bool GetPathToRuntimePack(DisasmoSettings settings, out string path, out string error, string arch = "x64")
@@ -76,7 +74,7 @@ namespace Disasmo.Runner
                 return false;
             }
 
-            path = runtimePackPath;
+            path = runtimePackPath!;
             return true;
         }
     }

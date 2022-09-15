@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
 
 namespace Disasmo.Runner;
 
@@ -73,7 +72,7 @@ public static class DisasmoSettingsExtensions
         {
             if (!JitUtils.GetPathToRuntimePack(settings, out var runtimePackPath, out error))
             {
-                result = null;
+                result = null!;
                 return false;
             }
 
@@ -91,7 +90,7 @@ public static class DisasmoSettingsExtensions
             if (methodName == "*")
             {
                 error = "Flowgraph for classes (all methods) is not supported yet.";
-                result = null;
+                result = null!;
                 return false;
             }
 
@@ -101,7 +100,7 @@ public static class DisasmoSettingsExtensions
             envVars["DOTNET_JitDumpFgFile"] = Path.GetTempFileName();
         }
 
-        error = null;
+        error = null!;
         result = envVars;
         return true;
     }
@@ -126,8 +125,8 @@ public static class DisasmoSettingsExtensions
         foreach (var envVar in envVars)
         {
             var keyLower = envVar.Key.ToLowerInvariant();
-            if (keyLower.StartsWith("dotnet_") == false
-                && keyLower.StartsWith("complus_") == false)
+            if (!keyLower.StartsWith("dotnet_")
+                && !keyLower.StartsWith("complus_"))
             {
                 continue;
             }

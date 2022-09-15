@@ -207,7 +207,7 @@ public static class Steps
             {
                 await LoaderAppManager.InitLoaderAndCopyTo(settings.TargetFramework, dstFolder, settings.CurrentVersion, log =>
                 {
-                    /*TODO: update UI*/
+                    /*TODO: update UI callback?*/
                 }, cancellationToken);
             }
 
