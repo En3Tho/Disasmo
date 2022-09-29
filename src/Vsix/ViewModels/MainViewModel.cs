@@ -116,6 +116,8 @@ namespace Disasmo
             }
         });
 
+        public string DefaultHotKey => DisasmoPackage.HotKey;
+
         public bool Success
         {
             get => _success;
@@ -212,7 +214,6 @@ namespace Disasmo
             {
                 IsLoading = true;
                 FgPngPath = null;
-                await Task.Delay(50);
                 MainPageRequested?.Invoke();
                 Success = false;
                 _currentSymbol = symbol;

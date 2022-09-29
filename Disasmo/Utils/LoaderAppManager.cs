@@ -44,6 +44,11 @@ namespace Disasmo.Utils
             string outDllDest = Path.Combine(dest, $"{DisasmoLoaderName}.dll");
             string outJsonDest = Path.Combine(dest, $"{DisasmoLoaderName}.runtimeconfig.json");
 
+            if (File.Exists(outDllDest) && File.Exists(outJsonDest))
+            {
+                return;
+            }
+
             if (!Directory.Exists(dir))
             {
                 Directory.CreateDirectory(dir);

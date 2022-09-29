@@ -29,6 +29,7 @@ namespace Disasmo
         private bool _presenterMode;
         private bool _useNoRestoreFlag;
         private bool _useTieredJit;
+        private bool _useUnloadableContext;
         private bool _usePGO;
         private bool _useCustomRuntime;
         private ObservableCollection<string> _customJits;
@@ -41,9 +42,9 @@ namespace Disasmo
         {
             PathToLocalCoreClr = Settings.Default.PathToCoreCLR_V9;
             ShowAsmComments = Settings.Default.ShowAsmComments_V9;
-            CustomEnvVars = Settings.Default.CustomEnvVars3_V12.Replace(";;", Environment.NewLine);
+            CustomEnvVars = Settings.Default.CustomEnvVars3_V13.Replace(";;", Environment.NewLine);
             Crossgen2Args = Settings.Default.CrossgenArgs_V4;
-            IlcArgs = Settings.Default.IlcArgs_V2.Replace(";;", Environment.NewLine);
+            IlcArgs = Settings.Default.IlcArgs_V3.Replace(";;", Environment.NewLine);
             JitDumpInsteadOfDisasm = Settings.Default.JitDumpInsteadOfDisasm_V9;
             UseDotnetBuildForReload = Settings.Default.UseDotnetBuildForReload_V9;
             RunAppMode = Settings.Default.RunAppMode_V9;
@@ -57,6 +58,7 @@ namespace Disasmo
             FgEnable = Settings.Default.FgEnable;
             PrintInlinees = Settings.Default.PrintInlinees_V3;
             UsePGO = Settings.Default.UsePGO;
+            UseUnloadableContext = Settings.Default.UseUnloadableContext;
             CheckUpdates();
         }
 
@@ -201,6 +203,10 @@ namespace Disasmo
                 Set(ref _runAppMode, value);
                 Settings.Default.RunAppMode_V9 = value;
                 Settings.Default.Save();
+                if (value)
+                {
+                    UseUnloadableContext = false;
+                }
             }
         }
 
@@ -330,6 +336,21 @@ namespace Disasmo
             }
         }
 
+        public bool UseUnloadableContext
+        {
+            get => _useUnloadableContext;
+            set
+            {
+                Set(ref _useUnloadableContext, value);
+                Settings.Default.UseUnloadableContext = value;
+                Settings.Default.Save();
+                if (value)
+                {
+                    RunAppMode = false;
+                }
+            }
+        }
+
         public bool ShowAsmComments
         {
             get => _showAsmComments;
@@ -347,7 +368,7 @@ namespace Disasmo
             set
             {
                 Set(ref _customEnvVars, value);
-                Settings.Default.CustomEnvVars3_V12 = value;
+                Settings.Default.CustomEnvVars3_V13 = value;
                 Settings.Default.Save();
             }
         }
@@ -369,7 +390,7 @@ namespace Disasmo
             set
             {
                 Set(ref _ilcArgs, value);
-                Settings.Default.IlcArgs_V2 = value;
+                Settings.Default.IlcArgs_V3 = value;
                 Settings.Default.Save();
             }
         }
