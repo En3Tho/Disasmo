@@ -31,8 +31,8 @@ var settings = new DisasmoSettings()
 var symbolInfo = new SymbolInfo()
 {
     MethodName = null,//"Equal1",
-    ClassName = "Issue61412",
-    QualifiedClassName = "Issue61412",
+    ClassName = "Issue55605",
+    QualifiedClassName = "Issue55605",
     IsLocalFunction = false
 };
 

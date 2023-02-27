@@ -83,7 +83,7 @@ namespace Disasmo.Utils
         {
             if (process.HasExited)
                 return Task.CompletedTask;
-            var tcs = new TaskCompletionSource<object>();
+            var tcs = new TaskCompletionSource<object?>();
             process.EnableRaisingEvents = true;
             process.Exited += (sender, args) => tcs.TrySetResult(null);
             if (cancellationToken != default(CancellationToken))

@@ -215,7 +215,7 @@ public static class Steps
                 return (true, error, null);
 
             string command =
-                $"\"{LoaderAppManager.DisasmoLoaderName}.dll\" \"{fileName}.dll\" \"{hostType}\" \"{methodName}\"";
+                $"\"{LoaderAppManager.DisasmoLoaderName}.dll\" \"{fileName}.dll\" \"{hostType}\" \"{methodName}\" \"False\"";
 
             if (settings.RunAppMode)
             {
